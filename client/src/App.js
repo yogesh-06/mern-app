@@ -10,9 +10,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import PrivateRoute from "./helpers/PrivateRoute";
+import Cart from "./pages/Cart";
 
 function App() {
-  const isLoggedIn = false;
+  const isAuthenticated = localStorage.getItem("token") ? true : false;
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
 
@@ -25,7 +26,7 @@ function App() {
             <Dashboard
               setSearchQuery={setSearchQuery}
               setFilterCategory={setFilterCategory}
-              isLoggedIn={isLoggedIn}
+              isLoggedIn={isAuthenticated}
             />
           }
         >
@@ -41,13 +42,21 @@ function App() {
           <Route path={"/details/:id"} element={<ProductDetails />} />
           <Route
             path="/profile"
-            element={<PrivateRoute isLoggedIn={isLoggedIn} element={Profile} />}
+            element={
+              <PrivateRoute isLoggedIn={isAuthenticated} element={Profile} />
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <PrivateRoute isLoggedIn={isAuthenticated} element={Cart} />
+            }
           />
           <Route path="/contact-us" element={<ContactUs />} />
           <Route
             path={"/check-out"}
             element={
-              <PrivateRoute isLoggedIn={isLoggedIn} element={Checkout} />
+              <PrivateRoute isLoggedIn={isAuthenticated} element={Checkout} />
             }
           />
 

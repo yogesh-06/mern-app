@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
+import axios from "axios";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -6,6 +7,9 @@ export default function ProductDetails() {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state?.product;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const { _id, title, description, rating, image, category, price } = product;
+  // console.log(product);
 
   if (!product) {
     return (
@@ -21,7 +25,26 @@ export default function ProductDetails() {
     );
   }
 
-  const { title, description, rating, image, category, price } = product;
+  const handleCart = (id) => {
+    const data = {
+      userId: user._id,
+      productId: _id,
+      title: title,
+      image: image,
+      price: price,
+      quantity: 1,
+    };
+    console.log("data==>", data);
+
+    axios
+      .post("http://localhost:8080/api/cart/add-to-cart", data)
+      .then((res) => {
+        console.log("===response===", res);
+      })
+      .catch((error) => {
+        console.log("error==", error);
+      });
+  };
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -81,7 +104,9 @@ export default function ProductDetails() {
               <strong>Rating:</strong> {renderStars(rating.rate)} (
               {rating.count} reviews)
             </p>
-            <button className="btn btn-warning">Add to Cart</button>
+            <button className="btn btn-warning" onClick={() => handleCart(_id)}>
+              Add to Cart
+            </button>
             <button
               onClick={() => navigate("/check-out")}
               className="btn btn-danger ms-2"

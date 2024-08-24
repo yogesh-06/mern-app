@@ -70,14 +70,26 @@ export default function Navbar({
           </form>
 
           {isLoggedIn ? (
-            <a className="border rounded-circle" href="/profile">
-              <img
-                src="https://c8.alamy.com/zooms/9/9c30002a90914b58b785a537a39421ba/2c80ydc.jpg"
-                alt="Profile Icon"
-                className="rounded-circle"
-                style={{ height: "4vh" }}
-              />
-            </a>
+            <>
+              <a className="me-2 " href="/cart">
+                <button type="button" class="btn btn-sm btn-primary">
+                  cart
+                  <img
+                    src="https://static.vecteezy.com/system/resources/previews/019/787/018/non_2x/shopping-cart-icon-shopping-basket-on-transparent-background-free-png.png"
+                    alt="Profile Icon"
+                    style={{ height: "3vh", width: "4vh" }}
+                  />
+                </button>
+              </a>
+              <a className="border rounded-circle" href="/profile">
+                <img
+                  src="https://c8.alamy.com/zooms/9/9c30002a90914b58b785a537a39421ba/2c80ydc.jpg"
+                  alt="Profile Icon"
+                  className="rounded-circle"
+                  style={{ height: "4vh" }}
+                />
+              </a>
+            </>
           ) : location.pathname === "/login" ? (
             <a className="btn btn-primary btn-sm" href="/register">
               Register

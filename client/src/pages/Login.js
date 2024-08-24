@@ -27,6 +27,9 @@ const LoginForm = () => {
         .post("http://localhost:8080/api/user/login", values)
         .then((res) => {
           console.log("===response===", res);
+          localStorage.setItem("token", res.data.accessToken);
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+
           navigate("/");
         })
         .catch((error) => {

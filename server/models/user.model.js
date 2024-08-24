@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const { JWT_SECRET_KEY, JWT_EXPIRE } = require("../config");
 
 const userModel = new mongoose.Schema({
   name: { type: String, required: true },
@@ -22,9 +23,9 @@ userModel.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userModel.methods.SignAccessToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+userModel.methods.signAccessToken = function () {
+  return jwt.sign({ id: this._id }, JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRE || "5m",
   });
 };
 

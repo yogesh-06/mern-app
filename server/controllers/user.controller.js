@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const { sendToken } = require("../utils/jwt");
 
 const userRegister = async (req, res, next) => {
   const { email } = req.body;
@@ -30,58 +31,60 @@ const userRegister = async (req, res, next) => {
   }
 };
 
-// const userLogin = async (req, res, next) => {
-//   const { email, password } = req.body;
+const userLogin = async (req, res, next) => {
+  const { email, password } = req.body;
 
-//   if (!email || !password) {
-//     console.log("please enter valid email and password");
-//     res.status(400).json({
-//       success: false,
-//       message: "Enter valid login credentials",
-//     });
-//   }
+  if (!email || !password) {
+    console.log("please enter valid email and password");
+    res.status(400).json({
+      success: false,
+      message: "Enter valid login credentials",
+    });
+  }
 
-//   const user = User.findOne({ email }).select("+password");
-//   if (!user) {
-//     res.status(400).json({
-//       success: false,
-//       message: "Invalid email ",
-//     });
-//   }
+  const user = await User.findOne({ email }).select("+password");
+  if (!user) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid email ",
+    });
+  }
 
-//   const isPasswordMatch = (await user).comparePassward(password);
-//   if (!isPasswordMatch) {
-//     res.status(400).json({
-//       success: false,
-//       message: "Invalid password ",
-//     });
-//   }
+  const isPasswordMatch = await user.comparePassword(password);
 
-//   sendToken(await user, 200, res);
-// };
+  if (!isPasswordMatch) {
+    res.status(400).json({
+      success: false,
+      message: "Invalid password ",
+    });
+  }
 
-// const sendToken = (user, statusCode, res) => {
-//   const accessToken = user.signAccessToken();
+  sendToken(await user, 200, res);
+};
 
-//   const accessTokenExpire = parseInt(
-//     process.env.ACCESS_TOKEN_EXPIRE || "300",
-//     10
-//   );
+const getUserById = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
 
-//   const accessTokenOptions = {
-//     expires: new Date(Date.now() + accessTokenExpire * 1000),
-//     maxAge: accessTokenExpire * 1000,
-//     httpOnly: true,
-//     sameSite: "lax",
-//   };
+    if (!user) {
+      res.status(400).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    res.status(200).json({
+      success: true,
+      response: user,
+    });
+  } catch (error) {
+    console.log("===error===>", error);
 
-//   res.cookie("accessToken", accessToken, accessTokenOptions);
-//   res.status(statusCode).json({
-//     success: true,
-//     user,
-//     accessToken,
-//   });
-// };
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+};
 
-// module.exports = { userRegister, userLogin };
-module.exports = userRegister;
+module.exports = { userRegister, userLogin, getUserById };
