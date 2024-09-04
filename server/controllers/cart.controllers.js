@@ -35,8 +35,6 @@ const addProductsToCart = async (req, res, next) => {
 
 const removeProductsFromCart = async (req, res, next) => {
   const { userId, productId } = req.body;
-  console.log("body==>", req.body);
-
   try {
     let cart = await Cart.findOne({ userId });
 
@@ -61,7 +59,6 @@ const getCartByUserId = async (req, res) => {
 
   try {
     const cart = await Cart.findOne({ userId });
-    // console.log(cart);
 
     if (cart) {
       res.status(200).json({ success: true, cart });

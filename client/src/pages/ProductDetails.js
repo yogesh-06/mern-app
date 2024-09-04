@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import axios from "axios";
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import axiosInstance from "../helpers/axios";
 
 export default function ProductDetails() {
   const location = useLocation();
@@ -36,8 +37,8 @@ export default function ProductDetails() {
     };
     console.log("data==>", data);
 
-    axios
-      .post("http://localhost:8080/api/cart/add-to-cart", data)
+    axiosInstance
+      .post("cart/add-to-cart", data)
       .then((res) => {
         console.log("===response===", res);
       })

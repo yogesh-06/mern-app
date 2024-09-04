@@ -1,13 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axiosInstance from "../helpers/axios";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/cart/get-cart/${user._id}`)
+  const fetchCartData = () => {
+    axiosInstance
+      .get(`/cart/get-cart/${user._id}`)
       .then((res) => {
         console.log(res.data);
         setCartItems(res.data.cart.items);
@@ -15,22 +16,26 @@ const Cart = () => {
       .catch((error) => {
         console.log("error==", error);
       });
+  };
+
+  useEffect(() => {
+    fetchCartData();
   }, []);
 
   const handleRemoveItem = (item) => {
     const data = {
       userId: user._id,
-      productId: item.id,
+      productId: item.productId,
       title: item.title,
       image: item.image,
       price: item.price,
     };
-    console.log("userid==>", data);
-    axios
-      .delete(`http://localhost:8080/api/cart/remove-cart-item`, { data: data })
+    axiosInstance
+      .delete(`cart/remove-cart-item`, { data: data })
       .then((res) => {
         console.log("res===>", res.data);
         // setCartItems(res.data.cart.items);
+        fetchCartData();
       })
       .catch((error) => {
         console.log("error==", error.response);

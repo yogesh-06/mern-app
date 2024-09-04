@@ -72,7 +72,7 @@ export default function Navbar({
           {isLoggedIn ? (
             <>
               <a className="me-2 " href="/cart">
-                <button type="button" class="btn btn-sm btn-primary">
+                <button type="button" className="btn btn-sm btn-primary">
                   cart
                   <img
                     src="https://static.vecteezy.com/system/resources/previews/019/787/018/non_2x/shopping-cart-icon-shopping-basket-on-transparent-background-free-png.png"
